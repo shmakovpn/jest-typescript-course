@@ -193,3 +193,21 @@ package-lock.json
 git status
 ```
 
+![git-status-4](docs/images/git-status-4.png)
+
+Ура! Мы исключили из git-а те файлы, которые мы не собирается распространять.
+
+```shell
+git diff package.json
+```
+
+![git-diff-1](docs/images/git-diff-1.png)
+
+Вспоминайте, что мы делали две минуты назад. Правильно. Мы установили `typescript` с ключом `-D`.
+Менеджер пакетов `npm` заботливо сохранил соответствующую запись в словарик `devDependencies` (зависимости для разработки).
+
+```shell
+git add .
+git commit -m 'установлен typescript'
+git status
+```
