@@ -1,0 +1,7 @@
+# .gitignore
+
+# чужой код
+node_modules/
+
+# файлы создаваемые автоматически
+package-lock.json
