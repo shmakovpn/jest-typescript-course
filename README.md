@@ -148,5 +148,13 @@ git log  # история commit-ов
 
 ```shell
 npm install -D typescript  # менеджер javascript-пакетов (npm) установи(install) пакет для разработки (-D) с именем typescript
-
 ```
+
+![npm-install-typescript](docs/images/npm-install-typescript.png)
+
+`added 1 package, and ..` - добавлен новый `javascript`-пакет.
+
+```shell
+git status
+```
+
