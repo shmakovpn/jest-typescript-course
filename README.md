@@ -450,3 +450,4 @@ code tsconfig.json  # открываем tsconfig.json в редакторе VSC
 tsc  # запускаем компилятор
 git status  # смотрим, что поменялось
 ```
+
