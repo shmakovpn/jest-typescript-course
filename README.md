@@ -433,3 +433,14 @@ tsc --init
 git status
 ```
 
+![git-status-6](docs/images/git-status-6.png)
+
+Появился новый `untracked file` - `tsconfig.json`.
+Зафиксируем наши достижения в систему контроля версий и двинемся дальше.
+
+```bash
+git add .  # добавляем все файлы в будущий commit
+git commit -m 'tsc --init'  # делаем commit
+code tsconfig.json  # открываем tsconfig.json в редакторе VSCode
+```
+
