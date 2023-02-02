@@ -444,3 +444,9 @@ git commit -m 'tsc --init'  # делаем commit
 code tsconfig.json  # открываем tsconfig.json в редакторе VSCode
 ```
 
+Оставим пока `tsconfig.json`, как есть и попробуем скомпилировать наш проект.
+
+```bash
+tsc  # запускаем компилятор
+git status  # смотрим, что поменялось
+```
