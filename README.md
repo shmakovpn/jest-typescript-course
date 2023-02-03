@@ -527,8 +527,8 @@ git status
 Но сначала уберем ненужные изменения, и поможет нам в этом `git`.
 
 ```bash
-git reset --hard
-git status
+git reset --hard  # откатываемся на последний commit
+git status  # смотрим, что получилось
 ```
 
 ![git-status-8](docs/images/git-status-8.png)
@@ -548,3 +548,13 @@ rm src/index.js
 
 Запускаем `tsc` и смотрим, что получилось.
 
+```bash
+tsc  # запускаем компилятор
+git status  # смотрим, что поменялось
+```
+
+![git-status-9](docs/images/git-status-9.png)
+
+Появилась папка `dist`, `git status` когда находит новые папки, не раскрывает их содержимое.
+Сделаем еще один смелый эксперимент, добавим все файлы в область будущего commit-а.
+Однако сам commit делать не будем.
