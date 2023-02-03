@@ -530,3 +530,21 @@ git status
 git reset --hard
 git status
 ```
+
+![git-status-8](docs/images/git-status-8.png)
+
+Остался болтаться `src/index.js`, его придется удалить отдельно.
+
+```bash
+rm src/index.js
+```
+
+Результаты компиляции вперемешку с исходным кодом вызывают проблемы уже сейчас.
+Настала пора это исправить, открываем `tsconfig.json`.
+
+```json
+"outDir": "./dist",
+```
+
+Запускаем `tsc` и смотрим, что получилось.
+
