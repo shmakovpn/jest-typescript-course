@@ -451,3 +451,39 @@ tsc  # запускаем компилятор
 git status  # смотрим, что поменялось
 ```
 
+Появился новый файл `src/index.js`.
+
+![tsc](docs/images/tsc.png)
+
+Его можно запустить.
+
+```bash
+node src/index.js
+```
+
+![node-src-index-js.png](docs/images/node-src-index-js.png)
+
+Сам файл `src/index.js` будет содержать `javascript` код содержимое которого зависит от настроек в `tsconfig.json`.
+
+```js
+"use strict";
+const helloWorld = {
+    from: 'typescript',
+    to: 'World',
+};
+console.log(`Hello ${helloWorld.to} from ${helloWorld.from}`);
+```
+
+Немного поэкспериментируем и изменим `tsconfig.json`.
+
+```json
+"target": "ES5",
+```
+
+Запустим компилятор.
+
+```bash
+tsc
+```
+
+
