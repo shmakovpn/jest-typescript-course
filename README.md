@@ -570,5 +570,30 @@ git status  # смотрим состояние git
 
 ```bash
 git reset  # очищаем область будущего commit-а
+git status  # смотрим состояние git
 ```
 
+![git-status-11](docs/images/git-status-11.png)
+
+Команда `git reset` отменяет все сделанные ранее `git add` и очищает область будущего commit-а.
+
+Пришло время внести изменения в `.gitignore`
+
+```bash
+# .gitignore
+
+# скомпилированные файлы
+dist/
+
+# чужой код
+node_modules/
+
+# файлы создаваемые автоматически
+package-lock.json
+```
+
+Посмотрим, как это повлияет на поведение `git`.
+
+```bash
+
+```
