@@ -1,3 +1,5 @@
+// index.ts
+
 interface Hello {
   from: string;
   to: string;

@@ -1,7 +1,7 @@
 // src/index.spec.ts
 const argsHistory: any[] = []; //
 const print = console.log; // надо оставить нашему тесту возможно вывода на терминал
-const resultFixture = 'Hello world from typescript'; // ожидаемый результат
+const resultFixture = 'Hello World from typescript'; // ожидаемый результат
 // делаем monkey patch
 console.log = (...args) => {
   argsHistory.push(args);
