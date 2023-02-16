@@ -790,8 +790,10 @@ tsc
 Зафиксируем текущее состояние и применим предлагаемое VSCode решение.
 
 ```bash
-git add .
-git commit -m 'index.spec.ts problem'
-
+git add .  # добавляем изменения в будущий commit
+git commit -m 'index.spec.ts problem'  # делаем commit
+npm i -D @types/node  # устанавливаем предлагаемый VSCode пакет.
+git diff  # смотрим, что поменялось в файлах относительно последнего commit-а
 ```
 
+Пусть вас не смущает `-D` это всего лишь более короткий вариант `--save-dev`.
