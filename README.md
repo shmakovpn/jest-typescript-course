@@ -787,3 +787,11 @@ tsc
 
 ![ide-require](docs/images/ide-require.png)
 
+Зафиксируем текущее состояние и применим предлагаемое VSCode решение.
+
+```bash
+git add .
+git commit -m 'index.spec.ts problem'
+
+```
+
