@@ -609,7 +609,7 @@ git status  # смотрим состояние git
 
 ```bash
 git add .
-git commit -m 'set destination to compiled filed'
+git commit -m 'set destination to compiled files'
 ```
 
 Конечно в `tsconfig.json` еще много параметров, и в рамках данной книги я не ставлю себе цель объяснить их все, т.к. даже из коробки все прекрасно работает. 
