@@ -1,5 +1,8 @@
 # .gitignore
 
+# скомпилированные файлы
+dist/
+
 # чужой код
 node_modules/
 
