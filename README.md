@@ -1110,8 +1110,105 @@ git add .
 git commit -m 'jest typescript works'
 ```
 
+## Наш первый настоящий typescript jest тест
 
-
-Помните первое, что должен сделать тест прежде чем реализовывать какую либо логику?
+Помните, первое, что должен сделать тест прежде чем реализовывать какую либо логику?
 
 Правильно. Надо импортировать тестируемый код.
+
+```typescript
+// src/index.spec.ts
+import './index'; // добавим импорт
+
+describe('We can', () => {
+  test('write test', () => {});
+});
+```
+
+Запустите `jest`. Он работает.
+
+Помните как в прошлый раз мы использовали прием `monkey patch` для подмены `console.log`?
+Сейчас нам предстоит сделать примерно тоже самое.
+
+```typescript
+// src/index.spec.ts
+const patchedLog = jest.spyOn(console, 'log'); // monkey patch-им console.log
+
+import './index'; // добавим импорт
+
+describe('Our application', () => {
+  // Подкорректируем описание группы тестов "Наше приложение"
+  test('logs to console', () => {
+    // Подкорректируем описание самого теста "пишет лог в консоль"
+    // Полное описание теста звучит, как утверждение "Наше приложение пишет лог в консоль"
+    expect(patchedLog).toBeCalledTimes(1); // проверяем, что console.log вызывался ровно 1 раз
+    expect(patchedLog).toBeCalledWith('Hello World from typescript');
+  });
+});
+```
+
+Результат выполнения теста:
+
+![jest-ok-2](docs/images/jest-ok-2.png)
+
+Тест проходит. Формируется красивый отчет. Side-эффект почему то остался.
+`jest.spyOn` название говорит само за себя, он создает объект, 
+который теперь следит за вызовами метода к которому он применен, изменяя его поведения.
+Т.к. поведение осталось прежним, мы видим *Hello World from typescript* в терминале.
+
+```typescript
+const patchedLog = jest.spyOn(console, 'log'); // вешаем шпиона
+patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+import './index'; // добавим импорт
+
+describe('Our application', () => {
+  // Подкорректируем описание группы тестов "Наше приложение"
+  test('logs to console', () => {
+    // Подкорректируем описание самого теста "пишет лог в консоль"
+    // Полное описание теста звучит, как утверждение "Наше приложение пишет лог в консоль"
+    expect(patchedLog).toBeCalledTimes(1); // проверяем, что console.log вызывался ровно 1 раз
+    expect(patchedLog).toBeCalledWith('Hello World from typescript');
+  });
+});
+```
+
+`mockImplementation` - дословно, создать пародию на реализацию. 
+Или, простыми словами, заменить одну функцию другой.
+
+Результат:
+
+![jest-ok-3](docs/images/jest-ok-3.png)
+
+Все работает, Side-эффект пропал.
+
+
+
+Проведем еще один эксперимент, намеренно, поломаем наш тест.
+
+```typescript
+// src/index.spec.ts
+const patchedLog = jest.spyOn(console, 'log'); // вешаем шпиона
+patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+import './index'; // добавим импорт
+
+describe('Our application', () => {
+  // Подкорректируем описание группы тестов "Наше приложение"
+  test('logs to console', () => {
+    // Подкорректируем описание самого теста "пишет лог в консоль"
+    // Полное описание теста звучит, как утверждение "Наше приложение пишет лог в консоль"
+    expect(patchedLog).toBeCalledTimes(1); // проверяем, что console.log вызывался ровно 1 раз
+    expect(patchedLog).toBeCalledWith('oops'); // Будем ожидать строку oops
+    // expect(patchedLog).toBeCalledWith('Hello World from typescript');
+  });
+});
+```
+
+![jest-failed-2](docs/images/jest-failed-2.png)
+
+Красота, `jest` подробно расписал, в каком место тест не сработал и почему,
+ожидалась (Expected) строка "oops", получена (Received) строка "Hello World from typescript.
+
+
+
