@@ -1,4 +1,5 @@
 // index.ts
+export {};  // экспортируем пустой объект
 
 interface Hello {
   from: string;

@@ -1,15 +1,21 @@
 // src/index.spec.ts
-const patchedLog = jest.spyOn(console, 'log'); // вешаем шпиона
-patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
-
-import './index'; // добавим импорт
-
 describe('Our application', () => {
-  // Подкорректируем описание группы тестов "Наше приложение"
-  test('logs to console', () => {
-    // Подкорректируем описание самого теста "пишет лог в консоль"
-    // Полное описание теста звучит, как утверждение "Наше приложение пишет лог в консоль"
-    expect(patchedLog).toBeCalledTimes(1); // проверяем, что console.log вызывался ровно 1 раз
+  test('logs to console', async () => {
+    // тест асинхронный
+    const patchedLog = jest.spyOn(console, 'log'); // вешаем monkey patch
+    patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+    // дождаться пока закончится динамический импорт, 
+    // прежде чем идти на следующую строчку
+    await import('./index'); 
+    expect(patchedLog).toBeCalledTimes(1);
     expect(patchedLog).toBeCalledWith('Hello World from typescript');
+    patchedLog.mockRestore(); // удаляем monkey patch
+  });
+});
+
+describe('Other test', () => {
+  test('console.log', () => {
+    console.log('I want to be printed!!');
   });
 });
