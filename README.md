@@ -1213,6 +1213,162 @@ describe('Our application', () => {
 Красота, `jest` подробно расписал, в каком место тест не сработал и почему,
 ожидалась (Expected) строка "oops", получена (Received) строка "Hello World from typescript.
 
-`
+```bash
+git reset --hard  # вернемся к предыдущему commit-у, когда тест работало
+```
 
+Сейчас наш monkey patch применяется глобально на все тесты в файле `index.spec.ts`.
+Чтобы в этом убедится, добавим еще одну группу тестов.
+
+```typescript
+// src/index.spec.ts
+const patchedLog = jest.spyOn(console, 'log'); // вешаем шпиона
+patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+import './index'; // добавим импорт
+
+describe('Our application', () => {
+  // Подкорректируем описание группы тестов "Наше приложение"
+  test('logs to console', () => {
+    // Подкорректируем описание самого теста "пишет лог в консоль"
+    // Полное описание теста звучит, как утверждение "Наше приложение пишет лог в консоль"
+    expect(patchedLog).toBeCalledTimes(1); // проверяем, что console.log вызывался ровно 1 раз
+    expect(patchedLog).toBeCalledWith('Hello World from typescript');
+  });
+});
+
+describe('Other test', () => {
+  test('console.log', () => {
+    console.log('I want to be printed!!');  // здесь мы хотим нормальный console.log 
+  });
+});
+```
+
+Результат:
+![jest-ok-4](docs/images/jest-ok-4.png)
+
+Получилось "одно лечим, другое калечим". Тесты должны быть изолированы друг от друга.
+Один тест не должен влиять на другой. Сейчас мы не видим в терминале *I want to be printed!!*.
+
+Казалось бы, все просто, достаточно перенести spyOn и mockImplementation в начало функции с тестом,
+а потом каким то образом их отменить.
+
+Однако, мы тестируем логику которая выполняется в момент импорта.
+Лучше не писать такой код. Здесь, я выбрал такой пример намеренно.
+Чтобы было сложно. Т.к. в реальности вам все равно придется с этим столкнуться и не раз.
+
+Нам надо перенести импорт. Номер с переносом строки импорта внутрь функции не пройдет.
+Это вам не `python`!
+
+![import-failed](docs/images/import-failed.png)
+
+Воспользуемся динамическим импортом.
+
+![dynamic-import-failed](docs/images/dynamic-import-failed.png)
+
+Вроде все правильно. В функцию `import()`, которая со скобочками, мы передали имя файла без расширения.
+`import()` возвращает, это асинхронная функция, она возвращает `Promise`.
+
+Тема Promise-ов выходит за рамки нашей книги. Поэтому затронем их совсем кратко.
+`Promise` это некий код который будет выполнен потом.
+Мы можем передать в `Promise` функцию, которая должны будет выполнится, 
+когда выполнится код Promise-а (это событие называют, когда `Promise` разрезолвится, 
+от английского слова resolve). 
+У Promise-а можно вызвать метод `then` и передать функцию в качестве аргумента.
+
+Синтаксис динамического импорта у нас правильный. Проблема в другом.
+Импортируемый файл `src/index.ts` не является модулем (is not a module).
+Модулем он не является, потому как ничего не экспортирует.
+
+Хорошо, исправим `src/index.ts`, чтобы он экспортировал пустой объект.
+
+```typescript
+// index.ts
+export {};  // экспортируем пустой объект
+
+interface Hello {
+  from: string;
+  to: string;
+}
+const helloWorld: Hello = {
+  from: 'typescript',
+  to: 'World',
+};
+console.log(`Hello ${helloWorld.to} from ${helloWorld.from}`);
+```
+
+Ошибка ушла. Код компилируется, тест проходит.
+Обязательно убедитесь в этом сами. Чем чаще вы запускаете `jest`,
+тем лучше владеете ситуацией, увереннее и качественнее пишете код.
+
+После переноса импорта, можно перенести `monkey patch` и добавить его отмену.
+
+```typescript
+// src/index.spec.ts
+describe('Our application', () => {
+  test('logs to console', () => {
+    const patchedLog = jest.spyOn(console, 'log'); // вешаем monkey patch
+    patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+    const module = import('./index').then(() => {
+      expect(patchedLog).toBeCalledTimes(1);
+      expect(patchedLog).toBeCalledWith('Hello World from typescript');
+    }).finally(()=>{
+      patchedLog.mockRestore(); // удаляем monkey patch
+    });
+  });
+});
+
+describe('Other test', () => {
+  test('console.log', () => {
+    console.log('I want to be printed!!');
+  });
+});
+```
+
+Результат:
+![jest-ok-promise-then](docs/images/jest-ok-promise-then.png)
+
+Мы опять молодцы! Тест работает.
+Остался последний штрих. Переделаем наше творение под асинхронный стиль вместо promise-ов.
+
+```typescript
+// src/index.spec.ts
+describe('Our application', () => {
+  test('logs to console', async () => {
+    // тест асинхронный
+    const patchedLog = jest.spyOn(console, 'log'); // вешаем monkey patch
+    patchedLog.mockImplementation(() => {}); // подменяем реализацию на функцию, которая ничего не делает
+
+    // дождаться пока закончится динамический импорт, 
+    // прежде чем идти на следующую строчку
+    await import('./index'); 
+    expect(patchedLog).toBeCalledTimes(1);
+    expect(patchedLog).toBeCalledWith('Hello World from typescript');
+    patchedLog.mockRestore(); // удаляем monkey patch
+  });
+});
+
+describe('Other test', () => {
+  test('console.log', () => {
+    console.log('I want to be printed!!');
+  });
+});
+```
+
+Наш код стал более читаемым. Результат останется прежним.
+
+Спешу вас поздравить!
+Без преувеличений, ваши достижения огромны. 
+Вы можете настроить `jest` под `typescript`.
+Умеете работать с динамическими импортами и писать тесты в асинхронном стиле.
+Вы владеете супер-приемом `monkey patch`.
+
+Образно говоря, вы в воде и умеете плавать. Дело за малым - переплыть океан.
+
+Традиционно.
+```
+git add .
+git commit -m 'async test with dynamic import'
+```
 
