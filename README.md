@@ -1182,7 +1182,10 @@ describe('Our application', () => {
 
 Все работает, Side-эффект пропал.
 
-
+```bash
+git add .
+git commit -m 'added mockImplementation'  # сохраняемся
+```
 
 Проведем еще один эксперимент, намеренно, поломаем наш тест.
 
@@ -1210,5 +1213,6 @@ describe('Our application', () => {
 Красота, `jest` подробно расписал, в каком место тест не сработал и почему,
 ожидалась (Expected) строка "oops", получена (Received) строка "Hello World from typescript.
 
+`
 
 
