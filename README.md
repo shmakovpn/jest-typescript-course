@@ -935,7 +935,7 @@ git add .  # добавляем содержимое текущего катал
 git commit -m 'installed jest'
 ```
 
-## Запуск Jest
+## Запуск пустого теста Jest
 
 Наш проект на текущий момент содержит один единственный файл с тестами `src/index.spec.ts`.
 Имя файла содержит суффикс `spec`. 
@@ -1053,3 +1053,65 @@ npm i -D @types/jest  # устанавливаем поддержку typescript
 Пакет установится, в `package.json` появится новая строчка в `devDependencies`, 
 VSCode перестанет ругаться, а проект снова начнет компилироваться.
 
+Фиксируем изменения.
+
+```bash
+git add .  # добавляем все файлы проекта в область будущего commit-а
+git commit -m 'first jest empty test'  # создаем commit
+```
+
+## Приучаем Jest к typescript
+
+Давайте добавим `typescript` код в наш тест. Код ничего делать не будет. 
+Главное, что файл `index.spec.ts` теперь нельзя будет запустить без компиляции.
+
+```typescript
+// src/index.spec.ts
+describe('We can', () => { // describe описывает группу из нескольких тестов
+  test('write test', () => {
+    const hello: string = 'world';  // добавим typescript код
+  }); // test собственно сам тест
+});
+```
+
+Можете запустить `tsc`, убедится, что синтаксис верный - проект компилируется.
+
+Однако, `jest` упадет:
+
+![jest-typescript-failed](docs/images/jest-typescript-failed.png)
+
+По другому и быть не могло. `jest` работает в обход компилятора. 
+Синтаксис `typescript` ему неведом. 
+
+```bash
+npm i -D ts-jest  # устанавливаем поддержку typescript для jest
+```
+
+В файле `jest.config.js` раскомментируем и настроим параметр `transform`
+
+```javascript
+transform: {
+  "^.+\\.(t|j)s$": "ts-jest"  // пропускать *.ts и *.js файлы через ts-jest
+},
+```
+
+Повторим попытку
+
+```bash
+jest
+```
+
+![jest-typescript-ok](docs/images/jest-typescript-ok.png)
+
+Невероятно. Мы молодцы! Мы справились! Делаем commit и идем дальше.
+
+```bash
+git add .
+git commit -m 'jest typescript works'
+```
+
+
+
+Помните первое, что должен сделать тест прежде чем реализовывать какую либо логику?
+
+Правильно. Надо импортировать тестируемый код.
