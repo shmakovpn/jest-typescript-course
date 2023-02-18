@@ -1532,3 +1532,69 @@ export function isDataValid(): boolean {
 ```bash
 git add .
 git commit -m 'before encapsulation'
+git branch  # смотрим ветки
+```
+
+![git-branch](docs/images/git-branch.png)
+
+Ок, у нас одна ветка, зовут ее `master`. Звездочка означает, что эта ветка сейчас активна.
+Создаем новую ветку и переключается на нее.
+
+```bash
+git checkout -b encapsulation-rewire  # создаем новую ветку с именем encapsulation-rewire
+git branch  # смотрим ветки
+```
+
+![git-branch-2](docs/images/git-branch-2.png)
+
+Ветка называется `encapsulation-rewire`, т.к. мы будем пытаться обходить инкапсуляцию
+с помощью библиотеку `rewire`. Это решение попалось мне в гугле одним из первых.
+
+Устанавливаем `rewire`.
+
+```bash
+npm i -D rewire
+```
+
+```typescript
+// encapsulation.spec.ts
+import rewire from 'rewire'; // пока только импортируем rewire
+```
+
+VSCode будет ругаться на ошибку, код не будет компилироваться.
+
+![import-rewire](docs/images/import-rewire.png)
+
+VSCode заботливо предложит установить поддержку типов для `rewire`. Ok.
+
+```bash
+npm i --save-dev @types/rewire  # устанавливаем поддержку типов для rewire
+```
+
+Ошибка ушло.
+
+`rewire` - это инструмент импорта модулей, аналог стандартного `require`.
+Что первое нам надо сделать в тесте? Кто помнит? Импортировать тестируемый код.
+
+```typescript
+// encapsulation.spec.ts
+import rewire from "rewire";
+
+const rewireModule = rewire('./encapsulation.ts');
+
+it('Rewire can import typescript', () => {});
+```
+
+![rewire-failed](docs/images/rewire-failed.png)
+
+Увы и ах. `rewire` не поддерживает `typescript`.
+
+Сохраним изменения на всякий случай, откатимся назад и создадим новую ветку.
+
+```bash
+git add .
+git commit -m 'rewire does not work with typescript'
+git checkout master  # возвращаемся на основную ветку
+git checkout -b encapsulation-babel-rewire
+```
+
