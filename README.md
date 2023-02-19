@@ -174,7 +174,7 @@ console.log(`Hello ${helloWorld.to} from ${helloWorld.from}`);
 
 ![run-typescript-code-failed](docs/images/run-typescript-code-failed.png)
 
-Давайте установим компилятор `typescript`. Но сперва сделаем коммит в систему контроля версий `git`.
+Давайте установим компилятор `typescript`. Но сперва сделаем commit в систему контроля версий `git`.
 
 ```bash
 git status  # текущее состояние системы контроля версий git
