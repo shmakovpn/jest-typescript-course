@@ -1559,7 +1559,7 @@ git branch  # смотрим ветки
 Устанавливаем `rewire`.
 
 ```bash
-npm i -D rewire
+npm i -D rewire  # устанавливаем rewire
 ```
 
 ```typescript
@@ -1609,10 +1609,19 @@ git checkout master  # возвращаемся на основную ветку
 git checkout -b encapsulation-babel-rewire  # переключаемся на новую ветку
 ```
 
-Устанавливаем babel-plugin-rewire
+Следующий вариант, который мне удалось найти в гугле, это `babel-plugin-rewire`.
+Он объединяет два подхода: `Babel` и `rewire`.
+
+Пару слов про `Babel`. 
+Вот его официальный сайт https://babeljs.io/.
+Если кратко `Babel` - это преобразователь одного `javascript` в другой `javascript`.
+Он умеет работать с `typescript`. К тому же `Babel` расширяемый, у него множество плагинов.
+
+Наша задача, чтобы при запуске тестов стартовал `Babel` и 
+пропускал код через преобразование `babel-plugin-rewire`.
 
 ```bash
-npm i -D babel-plugin-rewire
+npm i -D babel-plugin-rewire  # устанавливаем плагин
 ```
 
 Создадим конфигурационный файл для `Babel`. Подключим установленный плагин.
@@ -1817,6 +1826,7 @@ it('can mock encapsulation', () => {
 ![debug-test-2](docs/images/debug-test-3.png)
 
 Традиционно:
+
 ```bash
 git add .
 git commit -m 'babel rewire works'
@@ -1824,8 +1834,15 @@ git commit -m 'babel rewire works'
 
 Теперь надо перенести изменения в основную ветку.
 
+```bash
+git checkout master  # переключается на основную ветку
+git merge encapsulation-babel-rewire  # объединяем основную ветку с encapsulation-babel-rewire
+npm install  # приведем node_modules в соответствие с package.json
+```
 
+## Заключение
 
-
-
-
+Пришло время прощаться. Теперь у вас есть ключ к созданию тестируемых приложений на `typescript`.
+Вы знаете как обойти инкапсуляцию в модулях, проблему о которую сломались многие программисты.
+На основе материалов книги вы легко построите свой шаблон "правильного" проекта.
+Мне же остается пожелать вам только удачи и никогда не сдаваться.
