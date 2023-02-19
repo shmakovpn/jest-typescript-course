@@ -1822,6 +1822,8 @@ git add .
 git commit -m 'babel rewire works'
 ```
 
+Теперь надо перенести изменения в основную ветку.
+
 
 
 
