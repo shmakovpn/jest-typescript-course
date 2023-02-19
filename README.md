@@ -1816,6 +1816,11 @@ it('can mock encapsulation', () => {
 
 ![debug-test-2](docs/images/debug-test-3.png)
 
+Традиционно:
+```bash
+git add .
+git commit -m 'babel rewire works'
+```
 
 
 
